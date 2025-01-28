@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>金蛇送福迎新春 🐍</title>
+    <style>
+        body {
+            background: #ae0d0d; /* 中国红背景 */
+            font-family: '楷体', cursive;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .snake-path {
+            position: relative;
+            height: 80px;
+            margin: 50px 0;
+        }
+
+        #moving-snake {
+            position: absolute;
+            left: -100px;
+            width: 100px;
+            animation: slither 8s linear infinite;
+        }
+
+        @keyframes slither {
+            0% { left: -100px; transform: scaleX(1); }
+            49% { transform: scaleX(1); }
+            50% { left: 100%; transform: scaleX(-1); }
+            99% { transform: scaleX(-1); }
+            100% { left: -100px; transform: scaleX(1); }
+        }
+
+        .lantern {
+            position: absolute;
+            width: 40px;
+            animation: swing 3s ease-in-out infinite;
+        }
+
+        @keyframes swing {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        .blessing {
+            background: rgba(255, 215, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            box-shadow: 0 0 20px gold;
+        }
+
+        button {
+            background: #ffd700;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+            background: #ffeb3b;
+        }
+
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: yellow;
+            border-radius: 50%;
+            animation: explode 1s ease-out;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 灯笼装饰 -->
+        <img src=assets\images\01b76735-382b-4e9a-9d3e-4074b45a9a10.png class="lantern" style="left: 10%; top: 50px;">
+        <img src=assets\images\01b76735-382b-4e9a-9d3e-4074b45a9a10.png class="lantern" style="right: 10%; top: 50px;">
+
+        <h1 style="color: #ffd700;">🐍 蛇年行大运 🐉</h1>
+        
+        <div class="snake-path">
+            <img id="moving-snake" src=assets\images\f59c2748-9d1b-4e62-888e-73efd1b15b99.jpg alt="游蛇">
+        </div>
+
+        <div class="blessing" id="blessingText">
+            点击按钮接收祝福 ▼
+        </div>
+
+        <button onclick="showBlessing()">接福气</button>
+    </div>
+
+    <script>
+        const blessings = [
+            "金蛇狂舞辞旧岁，财源滚滚入门来！",
+            "蛇形走位躲晦气，S曲线迎好运！",
+            "旧疾随冬去，安康伴春归！",
+            "事业如蛇腾九霄，生活似蜜甜心头！",
+            "微信红包抢不停，天天都是幸运星！"
+        ];
+
+        function showBlessing() {
+            // 随机祝福
+            const randomIndex = Math.floor(Math.random() * blessings.length);
+            document.getElementById('blessingText').innerHTML = blessings[randomIndex];
+            
+            // 添加烟花效果
+            for(let i=0; i<20; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.left = Math.random() * 100 + '%';
+                firework.style.top = Math.random() * 100 + '%';
+                document.body.appendChild(firework);
+                
+                // 自动移除烟花元素
+                setTimeout(() => firework.remove(), 1000);
+            }
+        }
+
+        // 自动灯笼摆动
+        document.querySelectorAll('.lantern').forEach(lantern => {
+            lantern.style.animationDelay = Math.random() * 2 + 's';
+        });
+    </script>
+</body>
+</html>
