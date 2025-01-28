@@ -3,13 +3,14 @@ on: [push]
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 关键权限配置
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      - name: Deploy
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add .
-          git commit -m "Auto deploy" || echo "No changes"
-          git push
+        uses: actions/checkout@v4
+
+      - name: Deploy to Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./newyear  # 指定你的HTML文件目录
