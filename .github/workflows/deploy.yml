@@ -9,31 +9,34 @@ jobs:
     permissions:
       contents: write
       pages: write
-      id-token: write    # 必须为 write
+      id-token: write
 
     steps:
+      # 步骤1：检出代码（在仓库根目录开始）
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify Structure
+      # 步骤2：验证目录结构（调试用）
+      - name: Check Directory Structure
         run: |
-          echo "项目结构："
+          echo "当前目录: $PWD"
           ls -la
-          echo "newyear目录内容："
+          echo "newyear目录内容:"
           ls -la newyear
 
-      - name: Build Project
-        run: |
-          cd newyear
-          npm install
-          npm run build
-          echo "构建产物："
-          ls -la dist     # 关键检查点
+      # 步骤3：在根目录安装依赖（关键修改❗）
+      - name: Install Dependencies
+        run: npm install  # 去掉 cd newyear
 
+      # 步骤4：构建项目（根据实际配置调整）
+      - name: Build Project
+        run: npm run build
+
+      # 步骤5：部署到GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./newyear/dist  # 必须匹配实际构建目录
+          publish_dir: ./dist  # 根据实际构建目录调整
           destination_dir: /
-          force_orphan: true
+          keep_files: false
