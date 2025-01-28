@@ -1,20 +1,39 @@
 name: Auto Deploy
-on: [push]
+on: 
+  push:
+    branches: [ main ]  # 明确指定触发分支
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 写仓库权限
-      pages: write     # 新增Pages专用权限
-      id-token: read   # OIDC身份验证
+      contents: write   # 仓库写入权限
+      pages: write      # Pages部署权限
+      id-token: write   # 修正为 write（关键修复）❗
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      # 建议增加的构建步骤
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # 修正后的标准写法
-          publish_dir: ./newyear                     # 源文件目录
-          destination_dir: .                         # 部署到根目录
-          keep_files: false                          # 清理旧文件
+          node-version: 18.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Project
+        run: npm run build  # 假设你的项目需要构建
+
+      # 部署配置优化
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3.9.3  # 指定确定版本号
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./newyear/dist  # 明确构建后的目录
+          destination_dir: /           # 根目录部署
+          keep_files: false
+          force_orphan: true  # 强制清理历史记录
